@@ -9,6 +9,19 @@
       Son auteur : <%= gossip.author %><br/>
       Son content : <%= gossip.content %>
     </p>
+    <br/>
+    <p><small><B>Commentaires :</B>
+    <% if comment != nil %>
+      <% comment.each do |com| %>
+      <p><%=com%></p>
+      <% end %>
+    <%end%>
+    </small></p>
+    <br/><br/>
+    <form action=/gossips/<%=nb%>/ method='POST'>
+      <small>Un commentaire ? : <input type='text' name='gossip_comment'/></small>
+      <input type='submit'/>
+    </form>
     <br/><br/>
     <a href=/gossips/<%=nb%>/edit/>Editer le potin</a>
     <br/><br/>
