@@ -1,23 +1,35 @@
 require 'gossip'
-require 'view'
 
-class Controller
-  def initialize
-    @gossip = Gossip.new("walid","sarra")
-    @view = View.new#(aut,cont)
+class ApplicationController < Sinatra::Base
 
+  get '/' do
+    erb :index, locals: {gossips: Gossip.all}
   end
 
-
-  def create_gossip
-    params =Hash.new
-    params = @view.create_gossip
-    @gossip = Gossip.new(params[:author],params[:content])
-    @gossip.save
+  get '/gossips/new/' do
+    erb :new_gossip
   end
 
-  def read_gossip
-    @gossip.read
+  post '/gossips/new/' do
+    Gossip.new(params["gossip_author"], params["gossip_content"]).save
+    redirect '/'
   end
 
+  get '/gossips/:id/' do
+    id = params['id']
+    to_print = Gossip.find(id)
+    erb :show, locals: {gossip: to_print, nb: id}
+  end
+
+  get '/gossips/:id/edit/' do
+    id = params['id']
+    to_print = Gossip.find(id)
+    erb :edit, locals: {nb: id, gossip: to_print}
+  end
+
+  post '/gossips/:id/edit/' do
+    id = params['id'].to_i
+    Gossip.edit(id, params["new_gossip_author"], params["new_gossip_content"])
+    redirect '/'
+  end
 end
